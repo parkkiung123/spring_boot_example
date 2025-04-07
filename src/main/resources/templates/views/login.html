@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}" />
+    <script th:inline="javascript">
+        function showTab(tabId) {
+            document.getElementById("studentTab").style.display = "none";
+            document.getElementById("teacherTab").style.display = "none";
+            document.getElementById(tabId).style.display = "block";
+
+            document.getElementById("studentTabBtn").classList.remove("active");
+            document.getElementById("teacherTabBtn").classList.remove("active");
+            document.getElementById(tabId + "Btn").classList.add("active");
+        }
+
+        window.onload = function () {
+            var defaultTab = /*[[${role ?: 'user'}]]*/ 'user';
+            if (defaultTab === 'admin') {
+                showTab('teacherTab');
+            } else if (defaultTab === 'user') {
+                showTab('studentTab');
+            } else {
+                showTab('studentTab'); // 기본값으로 학생 로그인 탭을 표시
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="tabs">
+        <div id="studentTabBtn" class="tab" onclick="showTab('studentTab')">학생 로그인</div>
+        <div id="teacherTabBtn" class="tab" onclick="showTab('teacherTab')">선생님 로그인</div>
+    </div>
+
+    <div class="tab-content">
+
+        <!-- 학생 로그인 -->
+        <div id="studentTab" style="display:none;">
+            <form th:action="@{/login/user}" th:object="${loginForm}" method="post">
+                아이디: <input type="text" th:field="*{id}" /><br/>
+                <div th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="error"></div><br/>
+                이름: <input type="text" th:field="*{name}" /><br/>
+                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></div><br/>
+                <input type="submit" value="로그인" />
+            </form>
+
+            <div th:if="${errorMessage}" th:text="${errorMessage}" class="error"></div>
+        </div>
+
+        <!-- 선생님 로그인 -->
+        <div id="teacherTab" style="display:none;">
+            <form th:action="@{/login/admin}" th:object="${loginForm}" method="post">
+                아이디: <input type="text" th:field="*{id}" /><br/>
+                <div th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="error"></div><br/>
+                이름: <input type="text" th:field="*{name}" /><br/>
+                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></div><br/>
+                <input type="submit" value="로그인" />
+            </form>
+
+            <div th:if="${errorMessage}" th:text="${errorMessage}" class="error"></div>
+        </div>
+
+    </div>
+</body>
+</html>

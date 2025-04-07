@@ -1,0 +1,22 @@
+.tabs {
+    display: flex;
+    margin-bottom: 10px;
+}
+.tab {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
+.tab.active {
+    background-color: white;
+    font-weight: bold;
+}
+.tab-content {
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+.error {
+    color: red;
+}

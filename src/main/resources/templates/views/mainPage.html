@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring MVC</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2 th:text="${message}">메시지 출력</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>학번</th>
+                <th>이름</th>
+                <th>반</th>
+                <th>담임 선생님</th>
+                <th>국어</th>
+                <th>영어</th>
+                <th>수학</th>
+                <th>과학</th>
+                <th>역사</th>
+                <th>평균</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="student, iterStat : ${students}">
+                <td th:text="${student.id}">학번</td>
+                <td th:text="${student.name}">이름</td>
+                <td th:text="${student.classNum}">반</td>
+                <td th:text="${student.teacher}">담임</td>
+                <td th:text="${student.korean}">국어</td>
+                <td th:text="${student.english}">영어</td>
+                <td th:text="${student.math}">수학</td>
+                <td th:text="${student.science}">과학</td>
+                <td th:text="${student.history}">역사</td>
+                <td th:text="${averages[iterStat.index]}">평균</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${topStudentsMap != null and !topStudentsMap.isEmpty()}">
+        <h2>과목별 1등 학생</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>과목</th>
+                    <th>학번</th>
+                    <th>이름</th>
+                    <th>반</th>
+                    <th>점수</th>
+                </tr>
+            </thead>
+            <tbody>
+                <th:block th:each="entry : ${topStudentsMap}">
+                    <th:block th:each="student, stat : ${entry.value}">
+                        <tr th:if="${stat.index == 0}">
+                            <!-- 첫 번째 학생: 과목명과 rowspan 출력 -->
+                            <td th:text="${entry.key + '1등'}" th:rowspan="${entry.value.size()}">과목</td>
+                            <td th:text="${student.id}">학번</td>
+                            <td th:text="${student.name}">이름</td>
+                            <td th:text="${student.classNum}">반</td>
+                            <td th:text="${entry.key == '국어' ? student.korean :
+                                entry.key == '영어' ? student.english :
+                                entry.key == '수학' ? student.math :
+                                entry.key == '과학' ? student.science :
+                                entry.key == '역사' ? student.history :
+                                averageTopScore}">점수</td>
+                        </tr>
+                        <tr th:if="${stat.index > 0}">
+                            <!-- 나머지 학생: 과목명 없이 출력 -->
+                            <td th:text="${student.id}">학번</td>
+                            <td th:text="${student.name}">이름</td>
+                            <td th:text="${student.classNum}">반</td>
+                            <td th:text="${entry.key == '국어' ? student.korean :
+                                entry.key == '영어' ? student.english :
+                                entry.key == '수학' ? student.math :
+                                entry.key == '과학' ? student.science :
+                                entry.key == '역사' ? student.history :
+                                averageTopScore}">점수</td>
+                        </tr>
+                    </th:block>
+                </th:block>
+            </tbody>
+        </table>
+    </div>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">로그아웃</button>
+    </form>    
+</body>
+</html>
