@@ -57,7 +57,7 @@ spring.thymeleaf.prefix=classpath:/templates/views/
 spring.thymeleaf.suffix=.html
 spring.thymeleaf.cache=false
 spring.web.resources.static-locations=classpath:/static/
-# 에러 메시지를 classpath:/templates/views/error/error.html 에서만 확인하게게
+# 에러 메시지를 classpath:/templates/views/error/error.html 에서만 확인하도록
 server.error.whitelabel.enabled=false
 # view의 라이브 확인용
 spring.devtools.restart.enabled=true
