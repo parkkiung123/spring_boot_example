@@ -18,10 +18,10 @@ import com.example.demo.services.DBService;
 @Controller
 public class MainPageController {
     private static final Logger logger = LoggerFactory.getLogger(MainPageController.class);
-    private final DBService studentService;
+    private final DBService dbService;
 
-    public MainPageController(DBService studentService) {
-        this.studentService = studentService;
+    public MainPageController(DBService dbService) {
+        this.dbService = dbService;
     }
 
     @RequestMapping("/")
@@ -32,7 +32,7 @@ public class MainPageController {
             switch (role) {
                 case "admin":
                     logger.info("로그인한 선생님: " + form.getId() + ", " + form.getName());
-                    List<Student> students = studentService.findAllStudents();
+                    List<Student> students = dbService.findAllStudents();
                     if (students.isEmpty()) {
                         logger.info("학생 정보가 없습니다.");
                         model.addAttribute("message", "학생 정보가 없습니다.");
@@ -46,12 +46,12 @@ public class MainPageController {
                     model.addAttribute("averages", averages);
                     // 순서 : 국어, 영어, 수학, 과학, 역사, 평균
                     Map<String, List<Student>> topStudentsMap = new LinkedHashMap<>();
-                    topStudentsMap.put("국어", studentService.getTopByKorean());
-                    topStudentsMap.put("영어", studentService.getTopByEnglish());
-                    topStudentsMap.put("수학", studentService.getTopByMath());
-                    topStudentsMap.put("과학", studentService.getTopByScience());
-                    topStudentsMap.put("역사", studentService.getTopByHistory());
-                    List<Student> averageTop = studentService.getTopByAverage();
+                    topStudentsMap.put("국어", dbService.getTopByKorean());
+                    topStudentsMap.put("영어", dbService.getTopByEnglish());
+                    topStudentsMap.put("수학", dbService.getTopByMath());
+                    topStudentsMap.put("과학", dbService.getTopByScience());
+                    topStudentsMap.put("역사", dbService.getTopByHistory());
+                    List<Student> averageTop = dbService.getTopByAverage();
                     topStudentsMap.put("평균", averageTop);
                     model.addAttribute("topStudentsMap", topStudentsMap);
 
@@ -65,7 +65,7 @@ public class MainPageController {
                     break;
                 case "user":
                     logger.info("로그인한 학생: "  + form.getId() + ", " + form.getName());
-                    studentService.findStudentById(Long.parseLong(form.getId()))
+                    dbService.findStudentById(Long.parseLong(form.getId()))
                             .ifPresentOrElse(student -> {
                                 double average = (student.getKorean() + student.getEnglish() + student.getMath() + student.getScience() + student.getHistory()) / 5.0;
                                 model.addAttribute("students", List.of(student));
