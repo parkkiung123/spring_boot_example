@@ -26,6 +26,7 @@ spring-boot-devtools를 쓰면 view 변경 후 새로고침해서 바로 확인 
 @ExceptionHandler(NoResourceFoundException.class)로 404에러를 잡을 수 있는데,<br>
 favicon.ico가 없을 때도 예외가 발생하므로 favicon.ico를 추가하자.<br>
 DBService가 UserDetailsService를 구현하면 loadUserByUsername가 authenticationManager.authenticate(...) 를 호출할 때 내부적으로 호출된다고 한다.<br>
+VSCode에서 bootRun중 java변경 시 자동컴파일 안될 때 Shift+Alt+B (Java: Force Java Compilation) incremental선택<br>
 
 ## 버그 인가?
 thymeleaf뷰에서 map으로 넘어온 것의 keySet()을 취하여 th:each로 돌릴 때 key에 불필요한 공백이 추가되는 오류가 있다.<br>
