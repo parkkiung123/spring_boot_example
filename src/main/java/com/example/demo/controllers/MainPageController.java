@@ -5,19 +5,19 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.example.demo.dto.LoginForm;
 import com.example.demo.entities.Student;
 import com.example.demo.services.DBService;
 
+@Slf4j
 @Controller
 public class MainPageController {
-    private static final Logger logger = LoggerFactory.getLogger(MainPageController.class);
     private final DBService dbService;
 
     public MainPageController(DBService dbService) {
@@ -31,10 +31,10 @@ public class MainPageController {
             String role = form.getRole();
             switch (role) {
                 case "admin":
-                    logger.info("로그인한 선생님: " + form.getId() + ", " + form.getName());
+                    log.info("로그인한 선생님: " + form.getId() + ", " + form.getName());
                     List<Student> students = dbService.findAllStudents();
                     if (students.isEmpty()) {
-                        logger.info("학생 정보가 없습니다.");
+                        log.info("학생 정보가 없습니다.");
                         model.addAttribute("message", "학생 정보가 없습니다.");
                         return "mainPage";
                     }
@@ -60,11 +60,11 @@ public class MainPageController {
                     model.addAttribute("averageTopScore", averageTopScore);
 
                     topStudentsMap.forEach((subject, studentsList) -> {
-                        logger.info(subject + " 최고 점수 학생: " + studentsList);
+                        log.info(subject + " 최고 점수 학생: " + studentsList);
                     });
                     break;
                 case "user":
-                    logger.info("로그인한 학생: "  + form.getId() + ", " + form.getName());
+                    log.info("로그인한 학생: "  + form.getId() + ", " + form.getName());
                     dbService.findStudentById(Long.parseLong(form.getId()))
                             .ifPresentOrElse(student -> {
                                 double average = (student.getKorean() + student.getEnglish() + student.getMath() + student.getScience() + student.getHistory()) / 5.0;
@@ -78,7 +78,7 @@ public class MainPageController {
                     throw new IllegalArgumentException("잘못된 사용자 유형입니다.");                    
             }
         } else {
-            logger.info("로그인한 유저가 없습니다.");
+            log.info("로그인한 유저가 없습니다.");
         }
         model.addAttribute("message", "Hello, Spring MVC!");
         return "mainPage";

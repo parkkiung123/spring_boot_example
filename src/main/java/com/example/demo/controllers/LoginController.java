@@ -4,8 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,13 +20,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 import com.example.demo.dto.LoginForm;
 
+@Slf4j
 @Controller
 public class LoginController {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     private final AuthenticationManager authenticationManager;
 
     public LoginController(AuthenticationManager authenticationManager) {
@@ -44,7 +43,7 @@ public class LoginController {
                         HttpServletResponse response,
                         Model model) {
         if (bindingResult.hasErrors()) {
-            logger.info("로그인 실패: " + bindingResult.getFieldError().getDefaultMessage());
+            log.info("로그인 실패: " + bindingResult.getFieldError().getDefaultMessage());
             model.addAttribute("role", role);
             return "login"; // 로그인 페이지로 다시 이동
         } else {
@@ -59,12 +58,12 @@ public class LoginController {
                 new HttpSessionSecurityContextRepository().saveContext(
                     SecurityContextHolder.getContext(), request, response
                 );
-                logger.info("로그인 성공: " + form.getId() + ", " + form.getName());
+                log.info("로그인 성공: " + form.getId() + ", " + form.getName());
                 form.setRole(role);
                 session.setAttribute("loginUser", form);
                 return "redirect:/";
             } catch (AuthenticationException e) {
-                logger.info("로그인 실패: " + form.getId() + ", " + form.getName());
+                log.info("로그인 실패: " + form.getId() + ", " + form.getName());
                 model.addAttribute("errorMessage", "아이디 또는 이름이 일치하지 않습니다.");
                 model.addAttribute("role", role);
                 return "login"; // 로그인 페이지로 다시 이동
@@ -75,7 +74,7 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginForm(@RequestParam(required = false) String logout, Model model, HttpSession session) {
         if (logout != null) {
-            logger.info("로그아웃 성공");
+            log.info("로그아웃 성공");
         }
         model.addAttribute("loginForm", new LoginForm());
         return "login";
